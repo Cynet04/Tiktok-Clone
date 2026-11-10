@@ -36,12 +36,33 @@
   ],
   "videos": [
     {
+      "id": "1794289845517",
+      "userId": "1",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "thumbnail": "https://picsum.photos/seed/video1794289845516/400/700",
+      "caption": "Test video #test #demo",
+      "hashtags": [
+        "test",
+        "demo"
+      ],
+      "mentions": [],
+      "music": "Original Sound",
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "createdAt": "2026-11-10T05:50:45.517Z"
+    },
+    {
       "id": "1",
       "userId": "1",
       "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "thumbnail": "https://picsum.photos/seed/video1/400/700",
       "caption": "Just enjoying the sunset! 🌅 #sunset #nature #peaceful",
-      "hashtags": ["sunset", "nature", "peaceful"],
+      "hashtags": [
+        "sunset",
+        "nature",
+        "peaceful"
+      ],
       "music": "Chill Vibes - LoFi",
       "likes": 1234,
       "comments": 56,
@@ -54,7 +75,11 @@
       "videoUrl": "https://www.w3schools.com/html/movie.mp4",
       "thumbnail": "https://picsum.photos/seed/video2/400/700",
       "caption": "New dance routine! 💃🔥 #dance #choreography #viral",
-      "hashtags": ["dance", "choreography", "viral"],
+      "hashtags": [
+        "dance",
+        "choreography",
+        "viral"
+      ],
       "music": "Dance Monkey - Tones and I",
       "likes": 5678,
       "comments": 234,
@@ -67,7 +92,11 @@
       "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "thumbnail": "https://picsum.photos/seed/video3/400/700",
       "caption": "When life gives you lemons... 🍋😂 #comedy #funny #relatable",
-      "hashtags": ["comedy", "funny", "relatable"],
+      "hashtags": [
+        "comedy",
+        "funny",
+        "relatable"
+      ],
       "music": "Funny Background Music",
       "likes": 12345,
       "comments": 567,
@@ -80,7 +109,11 @@
       "videoUrl": "https://www.w3schools.com/html/movie.mp4",
       "thumbnail": "https://picsum.photos/seed/video4/400/700",
       "caption": "Morning coffee routine ☕ #morning #coffee #aesthetic",
-      "hashtags": ["morning", "coffee", "aesthetic"],
+      "hashtags": [
+        "morning",
+        "coffee",
+        "aesthetic"
+      ],
       "music": "Morning Jazz",
       "likes": 3421,
       "comments": 89,
@@ -93,7 +126,11 @@
       "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
       "thumbnail": "https://picsum.photos/seed/video5/400/700",
       "caption": "Practice makes progress! 💪 #dance #practice #motivation",
-      "hashtags": ["dance", "practice", "motivation"],
+      "hashtags": [
+        "dance",
+        "practice",
+        "motivation"
+      ],
       "music": "Workout Mix 2024",
       "likes": 8765,
       "comments": 178,
@@ -170,13 +207,37 @@
     }
   ],
   "hashtags": [
-    { "name": "fyp", "count": 2500000 },
-    { "name": "viral", "count": 1800000 },
-    { "name": "dance", "count": 1200000 },
-    { "name": "comedy", "count": 950000 },
-    { "name": "funny", "count": 890000 },
-    { "name": "trending", "count": 780000 },
-    { "name": "aesthetic", "count": 560000 },
-    { "name": "motivation", "count": 430000 }
+    {
+      "name": "fyp",
+      "count": 2500000
+    },
+    {
+      "name": "viral",
+      "count": 1800000
+    },
+    {
+      "name": "dance",
+      "count": 1200000
+    },
+    {
+      "name": "comedy",
+      "count": 950000
+    },
+    {
+      "name": "funny",
+      "count": 890000
+    },
+    {
+      "name": "trending",
+      "count": 780000
+    },
+    {
+      "name": "aesthetic",
+      "count": 560000
+    },
+    {
+      "name": "motivation",
+      "count": 430000
+    }
   ]
 }

@@ -812,11 +812,6 @@ class UIManager {
   }
 
   async handlePostVideo() {
-    if (!this.selectedVideoFile) {
-      this.showToast('Please select a video', 'error');
-      return;
-    }
-    
     const caption = this.elements.captionInput.value.trim();
     if (!caption) {
       this.showToast('Please add a caption', 'error');
@@ -827,14 +822,14 @@ class UIManager {
     this.elements.postVideoBtn.textContent = 'Posting...';
     
     try {
-      const formData = new FormData();
-      formData.append('video', this.selectedVideoFile);
-      formData.append('caption', caption);
-      formData.append('thumbnailTime', this.selectedThumbnailTime || 0);
-      
+      const user = auth.getUser();
       const response = await fetch('/api/videos', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          caption,
+          userId: user?.id
+        })
       });
       
       if (!response.ok) throw new Error('Upload failed');
@@ -842,6 +837,7 @@ class UIManager {
       this.showToast('Video posted successfully!', 'success');
       this.resetUploadForm();
       this.showPage('profile');
+      window.location.hash = 'profile';
     } catch (error) {
       this.showToast('Failed to post video', 'error');
     } finally {

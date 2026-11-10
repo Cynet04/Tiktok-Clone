@@ -7,8 +7,31 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 
+// Mock video URLs for demo
+const MOCK_VIDEOS = [
+  'https://www.w3schools.com/html/mov_bbb.mp4',
+  'https://www.w3schools.com/html/movie.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'
+];
+
+let mockVideoIndex = 0;
+
+function getNextMockVideo() {
+  const video = MOCK_VIDEOS[mockVideoIndex % MOCK_VIDEOS.length];
+  mockVideoIndex++;
+  return video;
+}
+
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 function readDB() {
@@ -59,17 +82,40 @@ app.get('/api/videos/:id', (req, res) => {
 
 app.post('/api/videos', (req, res) => {
   const db = readDB();
+  const user = req.body.userId || '1';
+  const caption = req.body.caption || '';
+  const hashtags = caption.match(/#(\w+)/g)?.map(h => h.slice(1)) || [];
+  const mentions = caption.match(/@(\w+)/g)?.map(m => m.slice(1)) || [];
+  
+  // Use a mock video URL for demo
+  const videoUrl = getNextMockVideo();
+  const thumbnail = `https://picsum.photos/seed/video${Date.now()}/400/700`;
+  
   const newVideo = {
     id: String(Date.now()),
-    ...req.body,
+    userId: user,
+    videoUrl,
+    thumbnail,
+    caption,
+    hashtags,
+    mentions,
+    music: 'Original Sound',
     likes: 0,
     comments: 0,
     shares: 0,
     createdAt: new Date().toISOString()
   };
+  
   db.videos.unshift(newVideo);
   writeDB(db);
-  res.status(201).json(newVideo);
+  
+  // Add video to user's stats
+  const userObj = db.users.find(u => u.id === user);
+  if (userObj) {
+    userObj.likes = (userObj.likes || 0) + 0; // placeholder
+  }
+  
+  res.status(201).json({ ...newVideo, user: userObj });
 });
 
 app.post('/api/videos/:id/like', (req, res) => {
@@ -172,6 +218,29 @@ app.put('/api/messages/:id/read', (req, res) => {
     writeDB(db);
   }
   res.json({ success: true });
+});
+
+// Draft saving endpoint
+app.post('/api/drafts', (req, res) => {
+  const db = readDB();
+  if (!db.drafts) db.drafts = [];
+  
+  const draft = {
+    id: String(Date.now()),
+    ...req.body,
+    createdAt: new Date().toISOString()
+  };
+  
+  db.drafts.unshift(draft);
+  writeDB(db);
+  res.status(201).json(draft);
+});
+
+app.get('/api/drafts', (req, res) => {
+  const db = readDB();
+  const userId = req.query.userId || '1';
+  const drafts = (db.drafts || []).filter(d => d.userId === userId);
+  res.json(drafts);
 });
 
 app.use((req, res, next) => {

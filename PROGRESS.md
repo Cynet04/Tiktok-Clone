@@ -1,9 +1,9 @@
 # TikTok Clone - Development Progress
 
 ## Current Status
-- **Phase**: 3 - Video Feed
+- **Phase**: 5 - Upload
 - **Last Updated**: 2026-11-10
-- **Current Task**: Implementing video feed with autoplay, vertical scroll, and infinite scroll
+- **Current Task**: Enhancing upload functionality with video processing, captions, thumbnails
 
 ## Completed Tasks
 - [x] Created TASKS.md with 10 phases
@@ -35,13 +35,18 @@
 - [x] Mock authentication with localStorage
 - [x] Protected routes for upload, profile, inbox
 - [x] User session persistence
-- [x] Git commit and push to GitHub (Phase 1 & 2)
+- [x] Video preloading for smooth playback
+- [x] Infinite scroll implementation
+- [x] Enhanced interactions (heart animation, comments, share, follow)
+- [x] Git commit and push to GitHub (Phase 1, 2, 3, & 4)
 
 ## In Progress
-- [ ] Phase 3: Video Feed enhancements
-- [ ] Infinite scroll implementation
-- [ ] Video loading optimizations
-- [ ] Swipe navigation between videos
+- [ ] Phase 5: Upload enhancements
+- [ ] Video file validation and processing
+- [ ] Caption with hashtag/mention autocomplete
+- [ ] Thumbnail selection from video frames
+- [ ] Draft saving
+- [ ] Upload progress indicator
 
 ## Blockers/Issues
 None.
@@ -53,5 +58,5 @@ None.
 - CSS variables for theming support
 - Express 5 compatibility fixed (catch-all route changed to middleware)
 - Server running on http://localhost:3000
-- Phase 1 & 2 completed and pushed to GitHub
+- Phase 1, 2, 3, & 4 completed and pushed to GitHub
 - Demo accounts: tiktokuser/dancestar/comedyking (password: 123456)
