@@ -76,7 +76,31 @@
 - [x] Error handling with retry mechanism (max 3 retries)
 - [x] Performance optimization (append instead of replace, preloading)
 
-## Phase 10: Refactoring & Polish ✅ COMPLETED
+## Phase 10: Video Upload UI & Backend Save ✅ COMPLETED
+- [x] Upload page UI with video selection
+- [x] Caption input with hashtag suggestions
+- [x] Thumbnail selection from video frames
+- [x] Mock upload to local database (POST /api/videos)
+- [x] Hashtag/mention extraction
+- [x] Draft saving API
+
+## Phase 11: Profile Grid ✅ COMPLETED
+- [x] Profile page layout with user stats
+- [x] User video grid showing uploaded videos
+- [x] Follower/Following counts
+- [x] Tab switching (Videos, Likes)
+- [x] Follow/Unfollow functionality
+- [x] IntersectionObserver for video autoplay in grid
+
+## Phase 12: Search/Discover ✅ COMPLETED
+- [x] Search bar with debounced autocomplete
+- [x] Trending hashtags display
+- [x] Search results page (Users, Videos, Hashtags tabs)
+- [x] Category filters with result tabs
+- [x] Recent searches persistence
+- [x] Hashtag filtering via /api/search
+
+## Phase 13: Refactoring & Polish ✅ COMPLETED
 - [x] Code organization and modularization
 - [x] Performance optimization (virtual scrolling, memoization)
 - [x] Accessibility improvements (ARIA labels, keyboard nav, focus management)
@@ -87,23 +111,3 @@
 - [ ] Unit tests for core modules (feed, auth, api)
 - [ ] E2E tests for critical user flows
 - [ ] Bundle analysis and optimization
-
-## Phase 11: Advanced Features
-- [ ] Dark/Light mode toggle with persistence
-- [ ] Video editing tools (trim, filters, effects)
-- [ ] Push notifications (Web Push API)
-- [ ] Live streaming UI with chat
-- [ ] Analytics dashboard for creators
-- [ ] Duet/Stitch video features
-- [ ] Sound/music library integration
-- [ ] AR filters (face tracking)
-
-## Phase 12: Scale & Production
-- [ ] Database migration (PostgreSQL/MongoDB)
-- [ ] Redis caching layer
-- [ ] CDN for video delivery
-- [ ] Load testing and auto-scaling
-- [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Monitoring & logging (Sentry, Datadog)
-- [ ] Rate limiting & DDoS protection
-- [ ] Multi-region deployment
