@@ -10,6 +10,9 @@ class UIManager {
     this.touchStartY = 0;
     this.touchStartX = 0;
     this.isScrolling = false;
+    this.searchDebounceTimer = null;
+    this.recentSearches = [];
+    this.searchCategories = ['users', 'videos', 'hashtags', 'sounds'];
   }
 
   init() {
@@ -143,7 +146,9 @@ class UIManager {
       btn.addEventListener('click', () => this.handleDemoLogin(btn.dataset.user));
     });
 
-    this.elements.discoverSearch.addEventListener('input', (e) => this.handleSearch(e.target.value));
+    // Search with debounce
+    this.elements.discoverSearch.addEventListener('input', (e) => this.handleSearchInput(e.target.value));
+    this.elements.discoverSearch.addEventListener('focus', () => this.showRecentSearches());
     this.elements.resultTabs.forEach(tab => {
       tab.addEventListener('click', () => this.switchResultTab(tab.dataset.type));
     });
@@ -185,6 +190,10 @@ class UIManager {
       if (e.target.closest('.conversation-item')) this.openChat(e);
       if (e.target.closest('.hashtag-item')) this.handleHashtagClick(e);
       if (e.target.closest('.video-grid-item')) this.handleVideoGridClick(e);
+      if (e.target.closest('.recent-search-item')) this.handleRecentSearchClick(e);
+      if (!e.target.closest('.search-input-wrapper') && !e.target.closest('.search-results')) {
+        this.hideRecentSearches();
+      }
     });
 
     this.elements.videoFeed.addEventListener('scroll', () => this.handleFeedScroll());
@@ -210,6 +219,8 @@ class UIManager {
   }
 
   renderInitialPage() {
+    this.loadRecentSearches();
+    
     const hash = window.location.hash.slice(1) || 'home';
     this.showPage(hash);
     
@@ -995,16 +1006,124 @@ class UIManager {
   async handleSearch(query) {
     if (!query.trim()) {
       this.elements.searchResults.classList.add('hidden');
+      this.showRecentSearches();
       return;
     }
+    
+    this.addToRecentSearches(query);
     
     try {
       const results = await api.search(query);
       this.elements.searchResults.classList.remove('hidden');
+      this.hideRecentSearches();
       this.renderSearchResults(results, 'users');
     } catch (error) {
       console.error('Search failed:', error);
     }
+  }
+
+  handleSearchInput(query) {
+    clearTimeout(this.searchDebounceTimer);
+    
+    if (!query.trim()) {
+      this.elements.searchResults.classList.add('hidden');
+      this.showRecentSearches();
+      return;
+    }
+    
+    this.searchDebounceTimer = setTimeout(() => {
+      this.handleSearch(query);
+    }, 300);
+  }
+
+  loadRecentSearches() {
+    try {
+      const stored = localStorage.getItem('tiktok_recent_searches');
+      if (stored) {
+        this.recentSearches = JSON.parse(stored);
+      }
+    } catch (e) {
+      this.recentSearches = [];
+    }
+  }
+
+  saveRecentSearches() {
+    localStorage.setItem('tiktok_recent_searches', JSON.stringify(this.recentSearches.slice(0, 10)));
+  }
+
+  addToRecentSearches(query) {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    
+    this.recentSearches = this.recentSearches.filter(s => s !== trimmed);
+    this.recentSearches.unshift(trimmed);
+    this.saveRecentSearches();
+  }
+
+  showRecentSearches() {
+    if (this.recentSearches.length === 0) return;
+    
+    const wrapper = this.elements.discoverSearch.closest('.search-input-wrapper');
+    let dropdown = wrapper.querySelector('.recent-searches-dropdown');
+    
+    if (!dropdown) {
+      dropdown = document.createElement('div');
+      dropdown.className = 'recent-searches-dropdown';
+      wrapper.appendChild(dropdown);
+    }
+    
+    dropdown.innerHTML = `
+      <div class="recent-searches-header">
+        <span>Recent searches</span>
+        <button class="clear-recent-searches" aria-label="Clear recent searches">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="recent-searches-list">
+        ${this.recentSearches.map(s => `
+          <button class="recent-search-item" data-query="${s}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 9l-6 6 6-6"></path>
+            </svg>
+            <span>${s}</span>
+          </button>
+        `).join('')}
+      </div>
+    `;
+    
+    dropdown.querySelector('.clear-recent-searches').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.clearRecentSearches();
+    });
+    
+    dropdown.classList.add('visible');
+  }
+
+  hideRecentSearches() {
+    const wrapper = this.elements.discoverSearch.closest('.search-input-wrapper');
+    const dropdown = wrapper.querySelector('.recent-searches-dropdown');
+    if (dropdown) {
+      dropdown.classList.remove('visible');
+    }
+  }
+
+  clearRecentSearches() {
+    this.recentSearches = [];
+    this.saveRecentSearches();
+    this.hideRecentSearches();
+  }
+
+  handleRecentSearchClick(e) {
+    const item = e.target.closest('.recent-search-item');
+    if (!item) return;
+    
+    const query = item.dataset.query;
+    this.elements.discoverSearch.value = query;
+    this.handleSearch(query);
+    this.hideRecentSearches();
   }
 
   switchResultTab(type) {

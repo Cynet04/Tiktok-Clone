@@ -45,12 +45,13 @@
 - [x] Hashtag/mention extraction
 - [x] Draft saving API
 
-## Phase 6: Profiles
-- [ ] Profile page layout
-- [ ] User video grid
-- [ ] Follower/Following counts
-- [ ] Edit profile modal
-- [ ] Tab switching (Videos, Likes)
+## Phase 6: Profiles ✅ COMPLETED
+- [x] Profile page layout
+- [x] User video grid
+- [x] Follower/Following counts
+- [x] Edit profile modal
+- [x] Tab switching (Videos, Likes)
+- [x] Follow/Unfollow functionality
 
 ## Phase 7: Search/Discover
 - [ ] Search bar with autocomplete
