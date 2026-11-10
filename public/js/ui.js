@@ -2,6 +2,18 @@ import feed from './feed.js';
 import auth from './auth.js';
 import api from './api.js';
 
+const EMOJI_DATA = {
+  smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'],
+  people: ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂', '🦻', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀', '👁️', '👅', '👄', '👶', '🧒', '👦', '👧', '🧑', '👱', '👨', '🧔', '👩', '🧓', '👴', '👵', '🙍', '🙎', '🙅', '🙆', '💁', '🙋', '🧏', '🙇', '🤦', '🤷', '🧑‍🦯', '👮', '🕵️', '💂', '🥷', '👷', '🤴', '👸', '👳', '👲', '🧕', '🤵', '👰', '🤰', '🤱', '👼', '🎅', '🤶', '🦸', '🦹', '🧙', '🧚', '🧛', '🧜', '🧝', '🧞', '🧟', '💆', '💇', '🚶', '🏃', '💃', '🕺', '🕴️', '🗣️', '🤷‍♂️', '🤷‍♀️', '🙋‍♂️', '🙋‍♀️', '🙅‍♂️', '🙅‍♀️', '🙆‍♂️', '🙆‍♀️', '💁‍♂️', '💁‍♀️', '🙇‍♂️', '🙇‍♀️', '🤦‍♂️', '🤦‍♀️'],
+  animals: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪱', '🐛', '🦋', '🐌', '🐞', '🐜', '🪰', '🪲', '🪳', '🦟', '🦗', '🕷️', '🕸️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🦣', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦫', '🦦', '🦥', '🐁', '🐀', '🐿️', '🦔'],
+  food: ['🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🥠', '🥡', '🦪', '🍤', '🍥', '🥮', '🍡', '🥧', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '☕', '🫖', '🍵', '🧃', '🥤', '🧋', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾', '🧊'],
+  activities: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥽', '🥋', '🥊', '🎽', '🛹', '🛷', '⛸️', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🤼', '🤸', '⛹️', '🤾', '🏌️', '🏇', '🧘', '🏄', '🏊', '🤽', '🚣', '🧗', '🚵', '🚴', '🏎️', '🏁', '🚣‍♂️', '🚣‍♀️', '🏊‍♂️', '🏊‍♀️', '⛹️‍♂️', '⛹️‍♀️', '🏋️‍♂️', '🏋️‍♀️', '🚴‍♂️', '🚴‍♀️', '🏇', '🏌️‍♂️', '🏌️‍♀️', '🏄‍♂️', '🏄‍♀️', '🤸‍♂️', '🤸‍♀️', '🧘‍♂️', '🧘‍♀️', '🏂', '🏂', '🏂', '🏂', '🏂', '🏂', '🏂', '🏂', '🏂', '🏂'],
+  travel: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🛻', '🚚', '🚛', '🚜', '🦯', '🦽', '🦼', '🛴', '🚲', '🛵', '🏍️', '🛺', '🚨', '🚔', '🚍', '🚘', '🚖', '🛺', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚉', '✈️', '🛫', '🛬', '🛩️', '💺', '🛰️', '🚀', '🛸', '🛶', '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '⚓', '⛽', '🚧', '🚦', '🚥', '🚏', '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🏜️', '🏝️', '🏞️', '🏜️', '🏝️', '🏞️', '🏜️', '🏝️'],
+  objects: ['⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '💽', '💾', '💿', '📀', '🧮', '🎥', '🎬', '📷', '📸', '📹', '🎞️', '📽️', '🎞️', '📞', '☎️', '📟', '📠', '📺', '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⌛', '⏳', '📡', '🔋', '🔌', '💡', '🔦', '🕯️', '🪔', '🪣', '🧹', '🧺', '🧻', '🪠', '🧼', '🫧', '🪥', '🧽', '🧯', '🛒', '🚬', '⚰️', '🪦', '⚱️', '🧱', '🧨', '🪨', '🪵', '🛖', '🛏️', '🛋️', '🪑', '🚽', '🪠', '🚿', '🛁', '🪤', '🛋️', '🛎️', '🧳', '🎒', '👝', '👛', '👜', '🎒', '👟', '👞', '👠', '👡', '🥾', '🥿', '🧦', '🧤', '🧣', '🧤', '🎩', '👒', '🎓', '🧢', '🪖', '⛑️', '👑', '👝', '💍', '💎', '🔇', '🔈', '🔉', '🔊', '📢', '📣', '📯', '🔔', '🔕', '🎼', '🎵', '🎶', '🎙️', '🎚️', '🎛️', '🎤', '🎧', '📻', '🎷', '🪗', '🎸', '🎹', '🎺', '🎻', '🪕', '🥁', '🪘', '📱', '📲', '📱', '📱'],
+  symbols: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '⛎', '🔀', '🔁', '🔂', '▶️', '⏩', '⏭️', '⏯️', '◀️', '⏪', '⏮️', '🔼', '⏫', '🔽', '⏬', '⏸️', '⏹️', '⏺️', '🔴', '🔵', '⏏️', '🎦', '🎥', '📋', '📌', '📍', '🏷️', '📏', '📐', '✂️', '🗃️', '🗄️', '🗑️', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '🛡️', '🚬', '⚰️', '🪦', '⚱️', '🏺', '🏮', '🗿', '🧬', '🧪', '🧫', '🧫', '🧫'],
+  flags: ['🏁', '🚩', '🎌', '🏴', '🏳️', '🏳️‍🌈', '🏳️‍⚧️', '🏴‍☠️', '🇦🇨', '🇦🇩', '🇦🇪', '🇦🇫', '🇦🇬', '🇦🇮', '🇦🇱', '🇦🇲', '🇦🇴', '🇦🇶', '🇦🇷', '🇦🇸', '🇦🇹', '🇦🇺', '🇦🇼', '🇦🇽', '🇦🇿', '🇧🇦', '🇧🇧', '🇧🇩', '🇧🇪', '🇧🇫', '🇧🇬', '🇧🇭', '🇧🇮', '🇧🇯', '🇧🇱', '🇧🇲', '🇧🇳', '🇧🇴', '🇧🇶', '🇧🇷', '🇧🇸', '🇧🇹', '🇧🇻', '🇧🇼', '🇧🇾', '🇧🇿', '🇨🇦', '🇨🇨', '🇨🇩', '🇨🇫', '🇨🇬', '🇨🇭', '🇨🇮', '🇨🇰', '🇨🇱', '🇨🇲', '🇨🇳', '🇨🇴', '🇨🇵', '🇨🇷', '🇨🇺', '🇨🇻', '🇨🇼', '🇨🇽', '🇨🇾', '🇨🇿', '🇩🇪', '🇩🇬', '🇩🇯', '🇩🇰', '🇩🇲', '🇩🇴', '🇩🇿', '🇪🇦', '🇪🇨', '🇪🇪', '🇪🇬', '🇪🇭', '🇪🇷', '🇪🇸', '🇪🇹', '🇪🇺', '🇫🇮', '🇫🇯', '🇫🇰', '🇫🇲', '🇫🇴', '🇫🇷', '🇬🇦', '🇬🇧', '🇬🇩', '🇬🇪', '🇬🇫', '🇬🇬', '🇬🇭', '🇬🇮', '🇬🇱', '🇬🇲', '🇬🇳', '🇬🇵', '🇬🇶', '🇬🇷', '🇬🇸', '🇬🇹', '🇬🇺', '🇬🇼', '🇬🇾', '🇭🇰', '🇭🇳', '🇭🇷', '🇭🇹', '🇭🇺', '🇮🇨', '🇮🇩', '🇮🇪', '🇮🇱', '🇮🇲', '🇮🇳', '🇮🇴', '🇮🇶', '🇮🇷', '🇮🇸', '🇮🇹', '🇯🇪', '🇯🇲', '🇯🇴', '🇯🇵', '🇰🇪', '🇰🇬', '🇰🇭', '🇰🇮', '🇰🇲', '🇰🇳', '🇰🇵', '🇰🇷', '🇰🇼', '🇰🇾', '🇰🇿', '🇱🇦', '🇱🇧', '🇱🇨', '🇱🇮', '🇱🇰', '🇱🇷', '🇱🇸', '🇱🇹', '🇱🇺', '🇱🇻', '🇱🇾', '🇲🇦', '🇲🇨', '🇲🇩', '🇲🇪', '🇲🇫', '🇲🇬', '🇲🇭', '🇲🇰', '🇲🇱', '🇲🇲', '🇲🇳', '🇲🇴', '🇲🇵', '🇲🇶', '🇲🇷', '🇲🇸', '🇲🇹', '🇲🇺', '🇲🇻', '🇲🇼', '🇲🇽', '🇲🇾', '🇲🇿', '🇳🇦', '🇳🇨', '🇳🇪', '🇳🇫', '🇳🇬', '🇳🇮', '🇳🇱', '🇳🇴', '🇳🇵', '🇳🇷', '🇳🇺', '🇳🇿', '🇴🇲', '🇵🇦', '🇵🇪', '🇵🇫', '🇵🇬', '🇵🇭', '🇵🇰', '🇵🇱', '🇵🇲', '🇵🇳', '🇵🇷', '🇵🇸', '🇵🇹', '🇵🇼', '🇵🇾', '🇶🇦', '🇷🇪', '🇷🇴', '🇷🇸', '🇷🇺', '🇷🇼', '🇸🇦', '🇸🇧', '🇸🇨', '🇸🇩', '🇸🇪', '🇸🇬', '🇸🇭', '🇸🇮', '🇸🇯', '🇸🇰', '🇸🇱', '🇸🇲', '🇸🇳', '🇸🇴', '🇸🇷', '🇸🇸', '🇸🇹', '🇸🇻', '🇸🇽', '🇸🇾', '🇸🇿', '🇹🇦', '🇹🇨', '🇹🇩', '🇹🇫', '🇹🇬', '🇹🇭', '🇹🇯', '🇹🇰', '🇹🇱', '🇹🇲', '🇹🇳', '🇹🇴', '🇹🇷', '🇹🇹', '🇹🇻', '🇹🇼', '🇹🇿', '🇺🇦', '🇺🇬', '🇺🇲', '🇺🇸', '🇺🇾', '🇺🇿', '🇻🇦', '🇻🇨', '🇻🇪', '🇻🇬', '🇻🇮', '🇻🇳', '🇻🇺', '🇼🇫', '🇼🇸', '🇽🇰', '🇾🇪', '🇾🇹', '🇿🇦', '🇿🇲', '🇿🇼']
+};
+
 class UIManager {
   constructor() {
     this.currentPage = 'home';
@@ -76,6 +88,7 @@ class UIManager {
       messagesContainer: document.getElementById('messagesContainer'),
       messageInput: document.getElementById('messageInput'),
       sendMessageBtn: document.getElementById('sendMessage'),
+      emojiBtn: document.querySelector('.emoji-btn'),
       profileAvatar: document.getElementById('profileAvatar'),
       profileName: document.getElementById('profileName'),
       profileBio: document.getElementById('profileBio'),
@@ -100,7 +113,11 @@ class UIManager {
       editDisplayName: document.getElementById('editDisplayName'),
       editUsername: document.getElementById('editUsername'),
       editBio: document.getElementById('editBio'),
-      editAvatar: document.getElementById('editAvatar')
+      editAvatar: document.getElementById('editAvatar'),
+      emojiPickerModal: document.getElementById('emojiPickerModal'),
+      emojiGrid: document.getElementById('emojiGrid'),
+      emojiCategories: document.querySelectorAll('.emoji-category'),
+      closeEmojiPicker: document.getElementById('closeEmojiPicker')
     };
 
     this.toastContainer = this.elements.toastContainer;
@@ -175,6 +192,21 @@ class UIManager {
     this.elements.closeEditProfileModal.addEventListener('click', () => this.closeModal('editProfileModal'));
     this.elements.cancelEditProfile.addEventListener('click', () => this.closeModal('editProfileModal'));
     this.elements.editProfileForm.addEventListener('submit', (e) => this.handleEditProfile(e));
+
+    // Emoji picker events
+    this.elements.closeEmojiPicker.addEventListener('click', () => this.closeEmojiPicker());
+    this.elements.emojiCategories.forEach(btn => {
+      btn.addEventListener('click', () => this.switchEmojiCategory(btn.dataset.category));
+    });
+    this.elements.emojiGrid.addEventListener('click', (e) => {
+      const item = e.target.closest('.emoji-item');
+      if (item) this.insertEmoji(item.dataset.emoji);
+    });
+
+    // Emoji button in message input
+    if (this.elements.emojiBtn) {
+      this.elements.emojiBtn.addEventListener('click', () => this.openEmojiPicker(this.elements.messageInput));
+    }
 
     this.elements.thumbnailSelector.addEventListener('click', (e) => {
       const option = e.target.closest('.thumbnail-option');
@@ -697,6 +729,48 @@ class UIManager {
     this.showToast('Profile updated!', 'success');
     this.closeModal('editProfileModal');
     this.loadProfile();
+  }
+
+  openEmojiPicker(targetInput) {
+    this.emojiTargetInput = targetInput;
+    this.renderEmojiGrid('smileys');
+    this.elements.emojiPickerModal.classList.remove('hidden');
+    this.elements.emojiPickerModal.style.position = 'fixed';
+    this.elements.emojiPickerModal.style.bottom = '80px';
+    this.elements.emojiPickerModal.style.left = '50%';
+    this.elements.emojiPickerModal.style.transform = 'translateX(-50%)';
+    this.elements.emojiPickerModal.style.zIndex = '1001';
+  }
+
+  closeEmojiPicker() {
+    this.elements.emojiPickerModal.classList.add('hidden');
+    this.emojiTargetInput = null;
+  }
+
+  switchEmojiCategory(category) {
+    this.elements.emojiCategories.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.category === category);
+    });
+    this.renderEmojiGrid(category);
+  }
+
+  renderEmojiGrid(category) {
+    const emojis = EMOJI_DATA[category] || [];
+    this.elements.emojiGrid.innerHTML = emojis.map(emoji => `
+      <button class="emoji-item" data-emoji="${emoji}" aria-label="${emoji}">${emoji}</button>
+    `).join('');
+  }
+
+  insertEmoji(emoji) {
+    if (this.emojiTargetInput) {
+      const start = this.emojiTargetInput.selectionStart;
+      const end = this.emojiTargetInput.selectionEnd;
+      const text = this.emojiTargetInput.value;
+      this.emojiTargetInput.value = text.slice(0, start) + emoji + text.slice(end);
+      this.emojiTargetInput.focus();
+      this.emojiTargetInput.selectionStart = this.emojiTargetInput.selectionEnd = start + emoji.length;
+    }
+    this.closeEmojiPicker();
   }
 
   async loadComments(videoId) {
@@ -1234,21 +1308,35 @@ class UIManager {
     `;
     
     this.elements.messagesContainer.innerHTML = `
-      <div class="message">
+      <div class="message" data-message-id="1">
         <div class="message-avatar">U</div>
         <div class="message-content">
           <div class="message-text">Hey! Love your content!</div>
           <div class="message-time">10:00 AM</div>
+          <div class="message-reactions">
+            <button class="reaction-btn" data-reaction="😀"><span class="reaction-emoji">😀</span><span class="reaction-count">1</span></button>
+            <button class="reaction-btn" data-reaction="❤️"><span class="reaction-emoji">❤️</span><span class="reaction-count">2</span></button>
+            <button class="reaction-btn" data-reaction="👍"><span class="reaction-emoji">👍</span><span class="reaction-count">1</span></button>
+          </div>
         </div>
       </div>
-      <div class="message own">
+      <div class="message own" data-message-id="2">
         <div class="message-content">
           <div class="message-text">Thanks! Means a lot 😊</div>
           <div class="message-time">10:05 AM</div>
+          <div class="message-reactions">
+            <button class="reaction-btn" data-reaction="😊"><span class="reaction-emoji">😊</span><span class="reaction-count">1</span></button>
+            <button class="reaction-btn" data-reaction="❤️"><span class="reaction-emoji">❤️</span><span class="reaction-count">3</span></button>
+          </div>
         </div>
         <div class="message-avatar">${auth.getUser()?.displayName?.charAt(0) || 'U'}</div>
       </div>
     `;
+    
+    // Add reaction event listeners
+    this.elements.messagesContainer.querySelectorAll('.reaction-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => this.handleReactionClick(e));
+    });
   }
 
   async handleSendMessage() {
@@ -1263,12 +1351,30 @@ class UIManager {
       <div class="message-content">
         <div class="message-text">${text}</div>
         <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+        <div class="message-reactions"></div>
       </div>
       <div class="message-avatar">${auth.getUser()?.displayName?.charAt(0) || 'U'}</div>
     `;
     
     this.elements.messagesContainer.appendChild(messageEl);
     this.elements.messagesContainer.scrollTop = this.elements.messagesContainer.scrollHeight;
+  }
+
+  handleReactionClick(e) {
+    const btn = e.target.closest('.reaction-btn');
+    if (!btn) return;
+    
+    const reaction = btn.dataset.reaction;
+    const countEl = btn.querySelector('.reaction-count');
+    const currentCount = parseInt(countEl.textContent) || 0;
+    
+    if (btn.classList.contains('has-reaction')) {
+      btn.classList.remove('has-reaction');
+      countEl.textContent = currentCount - 1;
+    } else {
+      btn.classList.add('has-reaction');
+      countEl.textContent = currentCount + 1;
+    }
   }
 
   async loadProfile() {
