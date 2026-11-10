@@ -253,14 +253,20 @@
             <form id="loginForm">
               <div class="form-group">
                 <label for="loginUsername">Username or Email</label>
-                <input type="text" id="loginUsername" required autocomplete="username">
+                <input type="text" id="loginUsername" required autocomplete="username" placeholder="tiktokuser">
               </div>
               <div class="form-group">
                 <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" required autocomplete="current-password">
+                <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="123456">
               </div>
               <button type="submit" class="btn btn-primary btn-full">Login</button>
             </form>
+            <div class="demo-credentials">
+              <p><strong>Demo accounts:</strong></p>
+              <button type="button" class="demo-btn" data-user="tiktokuser">@tiktokuser / 123456</button>
+              <button type="button" class="demo-btn" data-user="dancestar">@dancestar / 123456</button>
+              <button type="button" class="demo-btn" data-user="comedyking">@comedyking / 123456</button>
+            </div>
             <p class="auth-switch">Don't have an account? <a href="#signup" id="switchToSignup">Sign up</a></p>
           </div>
         </div>

@@ -129,6 +129,11 @@ class UIManager {
     this.elements.signupForm.addEventListener('submit', (e) => this.handleSignup(e));
     this.elements.switchToSignup.addEventListener('click', (e) => { e.preventDefault(); this.showPage('signup'); });
     this.elements.switchToLogin.addEventListener('click', (e) => { e.preventDefault(); this.showPage('login'); });
+    
+    // Demo login buttons
+    document.querySelectorAll('.demo-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.handleDemoLogin(btn.dataset.user));
+    });
 
     this.elements.discoverSearch.addEventListener('input', (e) => this.handleSearch(e.target.value));
     this.elements.resultTabs.forEach(tab => {
@@ -202,16 +207,45 @@ class UIManager {
 
   handleHashChange() {
     const hash = window.location.hash.slice(1) || 'home';
+    const protectedPages = ['upload', 'profile', 'inbox'];
+    const user = auth.getUser();
+    
+    if (protectedPages.includes(hash) && !user) {
+      window.location.hash = 'login';
+      this.showPage('login');
+      return;
+    }
+    
     this.showPage(hash);
   }
 
   handleNavClick(e, page) {
     e.preventDefault();
+    const protectedPages = ['upload', 'profile', 'inbox'];
+    const user = auth.getUser();
+    
+    if (protectedPages.includes(page) && !user) {
+      this.showToast('Please log in to access this page', 'info');
+      this.showPage('login');
+      window.location.hash = 'login';
+      return;
+    }
+    
     this.showPage(page);
     window.location.hash = page;
   }
 
   showPage(page) {
+    const protectedPages = ['upload', 'profile', 'inbox'];
+    const user = auth.getUser();
+    
+    if (protectedPages.includes(page) && !user) {
+      this.showToast('Please log in to access this page', 'info');
+      this.showPage('login');
+      window.location.hash = 'login';
+      return;
+    }
+    
     const pages = ['home', 'discover', 'inbox', 'profile', 'upload', 'login', 'signup'];
     
     pages.forEach(p => {
@@ -828,9 +862,16 @@ class UIManager {
     if (result.success) {
       this.showToast('Welcome back!', 'success');
       this.showPage('home');
+      window.location.hash = 'home';
     } else {
       this.showToast(result.error, 'error');
     }
+  }
+
+  handleDemoLogin(username) {
+    document.getElementById('loginUsername').value = username;
+    document.getElementById('loginPassword').value = '123456';
+    this.handleLogin({ preventDefault: () => {} });
   }
 
   async handleSignup(e) {
@@ -844,6 +885,7 @@ class UIManager {
     if (result.success) {
       this.showToast('Account created!', 'success');
       this.showPage('home');
+      window.location.hash = 'home';
     } else {
       this.showToast(result.error, 'error');
     }
@@ -853,6 +895,7 @@ class UIManager {
     auth.logout();
     this.showToast('Logged out', 'info');
     this.showPage('home');
+    window.location.hash = 'home';
   }
 
   updateAuthUI(user) {
@@ -862,9 +905,21 @@ class UIManager {
       this.elements.signupPage.classList.add('hidden');
       this.elements.uploadPage.classList.remove('hidden');
       this.elements.profilePage.classList.remove('hidden');
+      
+      // Show protected nav items
+      document.querySelectorAll('[data-page="upload"], [data-page="profile"], [data-page="inbox"]').forEach(el => {
+        el.style.display = '';
+      });
     } else {
       this.elements.topAvatar.textContent = 'U';
       this.elements.uploadPage.classList.add('hidden');
+      this.elements.profilePage.classList.add('hidden');
+      
+      // Hide protected nav items (but keep them in DOM for layout)
+      document.querySelectorAll('[data-page="upload"], [data-page="profile"], [data-page="inbox"]').forEach(el => {
+        if (el.tagName === 'A') el.style.display = 'none';
+        if (el.tagName === 'BUTTON') el.style.display = 'none';
+      });
     }
   }
 

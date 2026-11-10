@@ -1,9 +1,9 @@
 # TikTok Clone - Development Progress
 
 ## Current Status
-- **Phase**: 1 - UI Layout (COMPLETED)
+- **Phase**: 2 - Authentication
 - **Last Updated**: 2026-11-10
-- **Current Task**: Moving to Phase 2 - Authentication
+- **Current Task**: Implementing login/signup mock authentication
 
 ## Completed Tasks
 - [x] Created TASKS.md with 10 phases
@@ -32,9 +32,13 @@
 - [x] Login/Signup pages
 - [x] Toast notifications
 - [x] API endpoints for videos, users, hashtags, search, messages
+- [x] Git commit and push to remote
 
 ## In Progress
 - [ ] Phase 2: Authentication (Login/Signup mock)
+- [ ] Mock authentication with localStorage
+- [ ] Protected routes
+- [ ] User session persistence
 
 ## Blockers/Issues
 None.
@@ -46,3 +50,4 @@ None.
 - CSS variables for theming support
 - Express 5 compatibility fixed (catch-all route changed to middleware)
 - Server running on http://localhost:3000
+- Phase 1 completed and pushed to GitHub
