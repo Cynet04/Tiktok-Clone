@@ -36,12 +36,14 @@
 - [x] Comment threading support
 - [x] Share analytics tracking
 
-## Phase 5: Upload
-- [ ] Upload page UI
-- [ ] Video file selection
-- [ ] Caption input with hashtag suggestions
-- [ ] Thumbnail selection
-- [ ] Mock upload to local database
+## Phase 5: Upload ✅ COMPLETED
+- [x] Upload page UI
+- [x] Video file selection
+- [x] Caption input with hashtag suggestions
+- [x] Thumbnail selection
+- [x] Mock upload to local database
+- [x] Hashtag/mention extraction
+- [x] Draft saving API
 
 ## Phase 6: Profiles
 - [ ] Profile page layout

@@ -89,7 +89,15 @@ class UIManager {
       uploadPreview: document.getElementById('uploadPreview'),
       uploadPlaceholder: document.getElementById('uploadPlaceholder'),
       thumbnailSelector: document.getElementById('thumbnailSelector'),
-      hashtagSuggestions: document.getElementById('hashtagSuggestions')
+      hashtagSuggestions: document.getElementById('hashtagSuggestions'),
+      editProfileModal: document.getElementById('editProfileModal'),
+      editProfileForm: document.getElementById('editProfileForm'),
+      closeEditProfileModal: document.getElementById('closeEditProfileModal'),
+      cancelEditProfile: document.getElementById('cancelEditProfile'),
+      editDisplayName: document.getElementById('editDisplayName'),
+      editUsername: document.getElementById('editUsername'),
+      editBio: document.getElementById('editBio'),
+      editAvatar: document.getElementById('editAvatar')
     };
 
     this.toastContainer = this.elements.toastContainer;
@@ -117,7 +125,7 @@ class UIManager {
     this.elements.logoutBtn.addEventListener('click', () => this.handleLogout());
     this.elements.settingsBtn.addEventListener('click', () => this.showToast('Settings coming soon!', 'info'));
     this.elements.backToInbox.addEventListener('click', () => this.showInboxList());
-    this.elements.editProfileBtn.addEventListener('click', () => this.showToast('Edit profile coming soon!', 'info'));
+    this.elements.editProfileBtn.addEventListener('click', () => this.openEditProfileModal());
 
     this.elements.selectVideoBtn.addEventListener('click', () => this.elements.videoFileInput.click());
     this.elements.videoFileInput.addEventListener('change', (e) => this.handleVideoSelect(e));
@@ -157,6 +165,11 @@ class UIManager {
     this.elements.profileTabs.forEach(tab => {
       tab.addEventListener('click', () => this.switchProfileTab(tab.dataset.tab));
     });
+
+    // Edit profile modal events
+    this.elements.closeEditProfileModal.addEventListener('click', () => this.closeModal('editProfileModal'));
+    this.elements.cancelEditProfile.addEventListener('click', () => this.closeModal('editProfileModal'));
+    this.elements.editProfileForm.addEventListener('submit', (e) => this.handleEditProfile(e));
 
     this.elements.thumbnailSelector.addEventListener('click', (e) => {
       const option = e.target.closest('.thumbnail-option');
@@ -641,6 +654,38 @@ class UIManager {
   closeModal(modalId) {
     this.elements[modalId].classList.add('hidden');
     this.elements.commentInput.value = '';
+    
+    if (modalId === 'editProfileModal') {
+      this.elements.editProfileForm.reset();
+    }
+  }
+
+  openEditProfileModal() {
+    const user = auth.getUser();
+    if (!user) return;
+    
+    this.elements.editDisplayName.value = user.displayName || '';
+    this.elements.editUsername.value = user.username || '';
+    this.elements.editBio.value = user.bio || '';
+    this.elements.editAvatar.value = user.avatar || '';
+    
+    this.elements.editProfileModal.classList.remove('hidden');
+  }
+
+  async handleEditProfile(e) {
+    e.preventDefault();
+    
+    const updates = {
+      displayName: this.elements.editDisplayName.value,
+      username: this.elements.editUsername.value,
+      bio: this.elements.editBio.value,
+      avatar: this.elements.editAvatar.value
+    };
+    
+    auth.updateProfile(updates);
+    this.showToast('Profile updated!', 'success');
+    this.closeModal('editProfileModal');
+    this.loadProfile();
   }
 
   async loadComments(videoId) {
@@ -1188,7 +1233,26 @@ class UIManager {
 
   switchProfileTab(tab) {
     this.elements.profileTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-    // Load appropriate content
+    
+    const user = auth.getUser();
+    if (!user) return;
+    
+    if (tab === 'videos') {
+      this.loadProfileVideos(user.id);
+    } else if (tab === 'likes') {
+      this.loadLikedVideos(user.id);
+    }
+  }
+
+  async loadLikedVideos(userId) {
+    try {
+      const db = await fetch('/api/videos').then(r => r.json());
+      const likedVideos = db.videos.filter(v => v.likedByCurrentUser);
+      this.renderProfileVideoGrid(likedVideos);
+    } catch (error) {
+      console.error('Failed to load liked videos:', error);
+      this.elements.profileVideoGrid.innerHTML = '<p class="no-content">No liked videos yet</p>';
+    }
   }
 
   formatTime(dateString) {
