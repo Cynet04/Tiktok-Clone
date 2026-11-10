@@ -1,9 +1,9 @@
 # TikTok Clone - Development Progress
 
 ## Current Status
-- **Phase**: 2 - Authentication
+- **Phase**: 3 - Video Feed
 - **Last Updated**: 2026-11-10
-- **Current Task**: Implementing login/signup mock authentication
+- **Current Task**: Implementing video feed with autoplay, vertical scroll, and infinite scroll
 
 ## Completed Tasks
 - [x] Created TASKS.md with 10 phases
@@ -29,16 +29,19 @@
 - [x] Discover page with search and trending hashtags
 - [x] Inbox page with conversations and chat
 - [x] Upload page with video selection
-- [x] Login/Signup pages
+- [x] Login/Signup pages with demo accounts
 - [x] Toast notifications
 - [x] API endpoints for videos, users, hashtags, search, messages
-- [x] Git commit and push to remote
+- [x] Mock authentication with localStorage
+- [x] Protected routes for upload, profile, inbox
+- [x] User session persistence
+- [x] Git commit and push to GitHub (Phase 1 & 2)
 
 ## In Progress
-- [ ] Phase 2: Authentication (Login/Signup mock)
-- [ ] Mock authentication with localStorage
-- [ ] Protected routes
-- [ ] User session persistence
+- [ ] Phase 3: Video Feed enhancements
+- [ ] Infinite scroll implementation
+- [ ] Video loading optimizations
+- [ ] Swipe navigation between videos
 
 ## Blockers/Issues
 None.
@@ -50,4 +53,5 @@ None.
 - CSS variables for theming support
 - Express 5 compatibility fixed (catch-all route changed to middleware)
 - Server running on http://localhost:3000
-- Phase 1 completed and pushed to GitHub
+- Phase 1 & 2 completed and pushed to GitHub
+- Demo accounts: tiktokuser/dancestar/comedyking (password: 123456)

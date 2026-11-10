@@ -402,6 +402,15 @@ class UIManager {
     const videos = this.elements.videoFeed.querySelectorAll('.video-player');
     videos.forEach((video, index) => {
       const card = video.closest('.video-card');
+      const videoId = card.dataset.videoId;
+      
+      // Try to use preloaded video
+      const preloadedVideo = feed.getPreloadedVideo(videoId);
+      if (preloadedVideo && preloadedVideo.readyState >= 2) {
+        // Use preloaded video source
+        video.src = preloadedVideo.src;
+      }
+      
       feed.registerVideoElement(index, { video, card });
       
       video.addEventListener('loadeddata', () => {
@@ -448,6 +457,9 @@ class UIManager {
         if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
           if (video) video.play().catch(() => {});
           feed.setCurrentIndex(index);
+          
+          // Preload next videos when current video is visible
+          feed.preloadNextVideos();
         } else {
           if (video) video.pause();
         }

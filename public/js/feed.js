@@ -6,10 +6,12 @@ class FeedManager {
     this.videos = [];
     this.currentPage = 1;
     this.hasMore = true;
-    loading = false;
+    this.loading = false;
     this.currentVideoIndex = 0;
     this.videoElements = new Map();
     this.observers = new Set();
+    this.preloadCache = new Map();
+    this.maxPreload = 3;
   }
 
   async loadVideos(page = 1, append = false) {
@@ -30,6 +32,11 @@ class FeedManager {
       this.currentPage = response.page;
       this.hasMore = response.hasMore;
       this.notifyVideosChanged();
+      
+      // Preload next videos
+      if (append) {
+        this.preloadNextVideos();
+      }
     } catch (error) {
       console.error('Failed to load videos:', error);
       this.notifyError('Failed to load videos');
@@ -37,6 +44,26 @@ class FeedManager {
       this.loading = false;
       this.notifyLoading(false);
     }
+  }
+
+  preloadNextVideos() {
+    const currentIndex = this.currentVideoIndex;
+    const videosToPreload = this.videos.slice(currentIndex + 1, currentIndex + 1 + this.maxPreload);
+    
+    videosToPreload.forEach((video, offset) => {
+      if (!this.preloadCache.has(video.id)) {
+        const videoEl = document.createElement('video');
+        videoEl.src = video.videoUrl;
+        videoEl.preload = 'metadata';
+        videoEl.muted = true;
+        videoEl.playsInline = true;
+        this.preloadCache.set(video.id, videoEl);
+      }
+    });
+  }
+
+  getPreloadedVideo(videoId) {
+    return this.preloadCache.get(videoId);
   }
 
   async loadMore() {
