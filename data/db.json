@@ -1,0 +1,182 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "tiktokuser",
+      "displayName": "TikTok User",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=tiktokuser",
+      "bio": "Just having fun! 🎉",
+      "followers": 12500,
+      "following": 342,
+      "likes": 89000,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "username": "dancestar",
+      "displayName": "Dance Star",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=dancestar",
+      "bio": "Professional dancer 💃",
+      "followers": 54200,
+      "following": 120,
+      "likes": 234000,
+      "createdAt": "2023-11-20T14:30:00Z"
+    },
+    {
+      "id": "3",
+      "username": "comedyking",
+      "displayName": "Comedy King",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=comedyking",
+      "bio": "Making you laugh since 2020 😂",
+      "followers": 89000,
+      "following": 56,
+      "likes": 567000,
+      "createdAt": "2023-08-10T09:15:00Z"
+    }
+  ],
+  "videos": [
+    {
+      "id": "1",
+      "userId": "1",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "thumbnail": "https://picsum.photos/seed/video1/400/700",
+      "caption": "Just enjoying the sunset! 🌅 #sunset #nature #peaceful",
+      "hashtags": ["sunset", "nature", "peaceful"],
+      "music": "Chill Vibes - LoFi",
+      "likes": 1234,
+      "comments": 56,
+      "shares": 23,
+      "createdAt": "2024-01-20T18:30:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "thumbnail": "https://picsum.photos/seed/video2/400/700",
+      "caption": "New dance routine! 💃🔥 #dance #choreography #viral",
+      "hashtags": ["dance", "choreography", "viral"],
+      "music": "Dance Monkey - Tones and I",
+      "likes": 5678,
+      "comments": 234,
+      "shares": 145,
+      "createdAt": "2024-01-19T15:45:00Z"
+    },
+    {
+      "id": "3",
+      "userId": "3",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "thumbnail": "https://picsum.photos/seed/video3/400/700",
+      "caption": "When life gives you lemons... 🍋😂 #comedy #funny #relatable",
+      "hashtags": ["comedy", "funny", "relatable"],
+      "music": "Funny Background Music",
+      "likes": 12345,
+      "comments": 567,
+      "shares": 432,
+      "createdAt": "2024-01-18T12:00:00Z"
+    },
+    {
+      "id": "4",
+      "userId": "1",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "thumbnail": "https://picsum.photos/seed/video4/400/700",
+      "caption": "Morning coffee routine ☕ #morning #coffee #aesthetic",
+      "hashtags": ["morning", "coffee", "aesthetic"],
+      "music": "Morning Jazz",
+      "likes": 3421,
+      "comments": 89,
+      "shares": 34,
+      "createdAt": "2024-01-17T08:20:00Z"
+    },
+    {
+      "id": "5",
+      "userId": "2",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "thumbnail": "https://picsum.photos/seed/video5/400/700",
+      "caption": "Practice makes progress! 💪 #dance #practice #motivation",
+      "hashtags": ["dance", "practice", "motivation"],
+      "music": "Workout Mix 2024",
+      "likes": 8765,
+      "comments": 178,
+      "shares": 98,
+      "createdAt": "2024-01-16T20:10:00Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "videoId": "1",
+      "userId": "2",
+      "text": "Beautiful sunset! 🌅",
+      "likes": 12,
+      "createdAt": "2024-01-20T19:00:00Z"
+    },
+    {
+      "id": "2",
+      "videoId": "1",
+      "userId": "3",
+      "text": "So peaceful! Where is this?",
+      "likes": 8,
+      "createdAt": "2024-01-20T19:15:00Z"
+    },
+    {
+      "id": "3",
+      "videoId": "2",
+      "userId": "1",
+      "text": "Amazing moves! 🔥",
+      "likes": 45,
+      "createdAt": "2024-01-19T16:00:00Z"
+    },
+    {
+      "id": "4",
+      "videoId": "3",
+      "userId": "1",
+      "text": "I can't stop laughing! 😂😂",
+      "likes": 67,
+      "createdAt": "2024-01-18T12:30:00Z"
+    },
+    {
+      "id": "5",
+      "videoId": "3",
+      "userId": "2",
+      "text": "Best comedy on this app!",
+      "likes": 34,
+      "createdAt": "2024-01-18T13:00:00Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "1",
+      "fromUserId": "2",
+      "toUserId": "1",
+      "text": "Hey! Love your content!",
+      "read": true,
+      "createdAt": "2024-01-20T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "fromUserId": "1",
+      "toUserId": "2",
+      "text": "Thanks! Means a lot 😊",
+      "read": true,
+      "createdAt": "2024-01-20T10:05:00Z"
+    },
+    {
+      "id": "3",
+      "fromUserId": "3",
+      "toUserId": "1",
+      "text": "Want to collab?",
+      "read": false,
+      "createdAt": "2024-01-19T14:00:00Z"
+    }
+  ],
+  "hashtags": [
+    { "name": "fyp", "count": 2500000 },
+    { "name": "viral", "count": 1800000 },
+    { "name": "dance", "count": 1200000 },
+    { "name": "comedy", "count": 950000 },
+    { "name": "funny", "count": 890000 },
+    { "name": "trending", "count": 780000 },
+    { "name": "aesthetic", "count": 560000 },
+    { "name": "motivation", "count": 430000 }
+  ]
+}
