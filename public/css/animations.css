@@ -321,7 +321,7 @@
 }
 
 .video-caption-content {
-  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.8));
+  background: rgba(0,0,0,0.8);
   padding: 16px 0 24px;
 }
 
@@ -391,7 +391,7 @@
   height: 40px;
   border-radius: var(--radius-full);
   border: 2px solid white;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
