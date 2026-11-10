@@ -343,10 +343,20 @@ class UIManager {
       return;
     }
 
-    this.elements.videoFeed.innerHTML = videos.map((video, index) => this.createVideoCard(video, index)).join('');
+    const existingCards = this.elements.videoFeed.querySelectorAll('.video-card');
+    const startIndex = existingCards.length;
+    
+    const newCardsHtml = videos.slice(startIndex).map((video, index) => this.createVideoCard(video, startIndex + index)).join('');
+    
+    if (startIndex === 0) {
+      this.elements.videoFeed.innerHTML = newCardsHtml;
+    } else {
+      this.elements.videoFeed.insertAdjacentHTML('beforeend', newCardsHtml);
+    }
     
     this.setupVideoPlayers();
     this.setupIntersectionObserver();
+    this.setupLoadMoreObserver();
   }
 
   createVideoCard(video, index) {
@@ -454,6 +464,34 @@ class UIManager {
     return count.toString();
   }
 
+  createSkeletonCard(index) {
+    return `
+      <div class="video-card skeleton-card" data-index="${index}" style="height: 100vh;">
+        <div class="video-player-container skeleton-video"></div>
+        <div class="video-username">
+          <div class="video-avatar skeleton-avatar"></div>
+          <div class="video-user-info">
+            <div class="skeleton-text skeleton-username"></div>
+            <div class="skeleton-button"></div>
+          </div>
+        </div>
+        <div class="video-caption">
+          <div class="video-caption-content">
+            <div class="skeleton-text skeleton-caption"></div>
+            <div class="skeleton-text skeleton-caption-short"></div>
+            <div class="skeleton-text skeleton-music"></div>
+          </div>
+        </div>
+        <div class="video-actions">
+          <div class="video-action-btn skeleton-action"></div>
+          <div class="video-action-btn skeleton-action"></div>
+          <div class="video-action-btn skeleton-action"></div>
+          <div class="video-action-btn skeleton-action" style="width: 48px; height: 48px;"></div>
+        </div>
+      </div>
+    `;
+  }
+
   setupVideoPlayers() {
     const videos = this.elements.videoFeed.querySelectorAll('.video-player');
     videos.forEach((video, index) => {
@@ -503,7 +541,7 @@ class UIManager {
   }
 
   setupIntersectionObserver() {
-    const cards = this.elements.videoFeed.querySelectorAll('.video-card');
+    const cards = this.elements.videoFeed.querySelectorAll('.video-card:not(.skeleton-card)');
     
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -528,15 +566,97 @@ class UIManager {
     cards.forEach(card => observer.observe(card));
   }
 
+  setupLoadMoreObserver() {
+    // Create or get the load more trigger element
+    let loadMoreTrigger = this.elements.videoFeed.querySelector('.load-more-trigger');
+    if (!loadMoreTrigger) {
+      loadMoreTrigger = document.createElement('div');
+      loadMoreTrigger.className = 'load-more-trigger';
+      this.elements.videoFeed.appendChild(loadMoreTrigger);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const state = feed.getLoadingState();
+          if (state.hasMore && !state.loading) {
+            feed.loadMore();
+          }
+        }
+      });
+    }, {
+      root: this.elements.videoFeed,
+      rootMargin: '200px',
+      threshold: 0
+    });
+
+    observer.observe(loadMoreTrigger);
+    this.loadMoreObserver = observer;
+  }
+
+  showSkeletonLoaders(count = 3) {
+    const existingCount = this.elements.videoFeed.querySelectorAll('.video-card').length;
+    const skeletonHtml = Array.from({ length: count }, (_, i) => this.createSkeletonCard(existingCount + i)).join('');
+    this.elements.videoFeed.insertAdjacentHTML('beforeend', skeletonHtml);
+  }
+
+  hideSkeletonLoaders() {
+    const skeletons = this.elements.videoFeed.querySelectorAll('.skeleton-card');
+    skeletons.forEach(el => el.remove());
+  }
+
+  showLoadError(error) {
+    // Remove any existing error
+    this.hideLoadError();
+    
+    const errorEl = document.createElement('div');
+    errorEl.className = 'load-error';
+    errorEl.innerHTML = `
+      <div class="load-error-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <p>${error || 'Failed to load more videos'}</p>
+        <button class="btn btn-primary retry-btn">Retry</button>
+      </div>
+    `;
+    
+    this.elements.videoFeed.appendChild(errorEl);
+    
+    errorEl.querySelector('.retry-btn').addEventListener('click', () => {
+      this.hideLoadError();
+      feed.retryLoad();
+    });
+  }
+
+  hideLoadError() {
+    const errorEl = this.elements.videoFeed.querySelector('.load-error');
+    if (errorEl) errorEl.remove();
+  }
+
   handleFeedScroll() {
     const { scrollTop, scrollHeight, clientHeight } = this.elements.videoFeed;
     
+    // Fallback scroll-based load more (in case IntersectionObserver fails)
     if (scrollTop + clientHeight >= scrollHeight - 200) {
-      feed.loadMore();
+      const state = feed.getLoadingState();
+      if (state.hasMore && !state.loading) {
+        feed.loadMore();
+      }
     }
     
-    this.elements.loadingIndicator.classList.toggle('visible', feed.loading);
-    this.elements.endIndicator.classList.toggle('visible', !feed.hasMore && feed.getVideos().length > 0);
+    const state = feed.getLoadingState();
+    this.elements.loadingIndicator.classList.toggle('visible', state.loading);
+    this.elements.endIndicator.classList.toggle('visible', !state.hasMore && feed.getVideos().length > 0);
+    
+    // Show error if there is one
+    if (state.error) {
+      this.showLoadError(state.error);
+    } else {
+      this.hideLoadError();
+    }
   }
 
   handleTouchStart(e) {

@@ -12,11 +12,15 @@ class FeedManager {
     this.observers = new Set();
     this.preloadCache = new Map();
     this.maxPreload = 3;
+    this.loadError = null;
+    this.retryCount = 0;
+    this.maxRetries = 3;
   }
 
   async loadVideos(page = 1, append = false) {
     if (this.loading) return;
     this.loading = true;
+    this.loadError = null;
     this.notifyLoading(true);
 
     try {
@@ -31,6 +35,7 @@ class FeedManager {
       
       this.currentPage = response.page;
       this.hasMore = response.hasMore;
+      this.retryCount = 0;
       this.notifyVideosChanged();
       
       // Preload next videos
@@ -39,11 +44,21 @@ class FeedManager {
       }
     } catch (error) {
       console.error('Failed to load videos:', error);
+      this.loadError = error.message;
+      this.retryCount++;
       this.notifyError('Failed to load videos');
     } finally {
       this.loading = false;
       this.notifyLoading(false);
     }
+  }
+
+  async retryLoad() {
+    if (this.retryCount >= this.maxRetries) {
+      this.notifyError('Max retries reached. Please refresh the page.');
+      return;
+    }
+    await this.loadVideos(this.currentPage + 1, true);
   }
 
   preloadNextVideos() {
@@ -81,6 +96,16 @@ class FeedManager {
 
   getCurrentVideo() {
     return this.videos[this.currentVideoIndex];
+  }
+
+  getLoadingState() {
+    return {
+      loading: this.loading,
+      hasMore: this.hasMore,
+      error: this.loadError,
+      retryCount: this.retryCount,
+      maxRetries: this.maxRetries
+    };
   }
 
   setCurrentIndex(index) {
