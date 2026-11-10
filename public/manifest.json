@@ -1,0 +1,37 @@
+{
+  "name": "TikTok Clone",
+  "short_name": "TikTok",
+  "description": "A TikTok clone built with Node.js/Express and Vanilla JS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23000' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%23fff'>🎵</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "social", "video"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Create Video",
+      "short_name": "Create",
+      "description": "Create a new video",
+      "url": "/#upload",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'><line x1='12' y1='5' x2='12' y2='19'></line><line x1='5' y1='12' x2='19' y2='12'></line></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Discover",
+      "short_name": "Discover",
+      "description": "Discover trending content",
+      "url": "/#discover",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'><circle cx='11' cy='11' r='8'></circle><line x1='21' y1='21' x2='16.65' y2='16.65'></line></svg>", "sizes": "96x96" }]
+    }
+  ]
+}

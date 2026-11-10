@@ -32,6 +32,7 @@ class UIManager {
     this.bindEvents();
     this.setupFeedObserver();
     this.setupAuthListener();
+    this.initAccessibility();
     this.renderInitialPage();
   }
 
@@ -812,6 +813,7 @@ class UIManager {
     if (user) {
       this.elements.commentAvatar.textContent = user.displayName?.charAt(0) || user.username?.charAt(0) || 'U';
     }
+    this.trapFocus(this.elements.commentModal.querySelector('.comment-modal'));
   }
 
   closeModal(modalId) {
@@ -833,6 +835,7 @@ class UIManager {
     this.elements.editAvatar.value = user.avatar || '';
     
     this.elements.editProfileModal.classList.remove('hidden');
+    this.trapFocus(this.elements.editProfileModal.querySelector('.edit-profile-modal'));
   }
 
   async handleEditProfile(e) {
@@ -860,6 +863,7 @@ class UIManager {
     this.elements.emojiPickerModal.style.left = '50%';
     this.elements.emojiPickerModal.style.transform = 'translateX(-50%)';
     this.elements.emojiPickerModal.style.zIndex = '1001';
+    this.trapFocus(this.elements.emojiPickerModal.querySelector('.emoji-picker-modal'));
   }
 
   closeEmojiPicker() {
@@ -947,6 +951,7 @@ class UIManager {
   openShareModal(videoId) {
     this.currentShareVideoId = videoId;
     this.elements.shareModal.classList.remove('hidden');
+    this.trapFocus(this.elements.shareModal.querySelector('.share-modal'));
   }
 
   async handleShare(platform) {
@@ -1654,6 +1659,161 @@ class UIManager {
 
   handleResize() {
     // Handle responsive adjustments
+  }
+
+  // Focus management for modals
+  trapFocus(element) {
+    const focusableElements = element.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    element.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    });
+
+    firstElement?.focus();
+  }
+
+  // Keyboard navigation for feed
+  handleFeedKeydown(e) {
+    const activeCard = this.elements.videoFeed.querySelector('.video-card:focus-within');
+    if (!activeCard) return;
+
+    const index = parseInt(activeCard.dataset.index);
+    const totalVideos = feed.getVideos().length;
+
+    switch (e.key) {
+      case 'ArrowDown':
+      case ' ':
+        e.preventDefault();
+        if (index < totalVideos - 1) {
+          const nextCard = this.elements.videoFeed.querySelector(`[data-index="${index + 1}"]`);
+          nextCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          nextCard?.focus();
+        }
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (index > 0) {
+          const prevCard = this.elements.videoFeed.querySelector(`[data-index="${index - 1}"]`);
+          prevCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          prevCard?.focus();
+        }
+        break;
+      case 'Home':
+        e.preventDefault();
+        const firstCard = this.elements.videoFeed.querySelector('[data-index="0"]');
+        firstCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        firstCard?.focus();
+        break;
+      case 'End':
+        e.preventDefault();
+        const lastCard = this.elements.videoFeed.querySelector(`[data-index="${totalVideos - 1}"]`);
+        lastCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        lastCard?.focus();
+        break;
+      case 'Enter':
+      case ' ':
+        // Handle action buttons within the focused card
+        break;
+    }
+  }
+
+  // Announce for screen readers
+  announce(message, priority = 'polite') {
+    const announcer = document.createElement('div');
+    announcer.setAttribute('role', 'status');
+    announcer.setAttribute('aria-live', priority);
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.className = 'visually-hidden';
+    announcer.textContent = message;
+    document.body.appendChild(announcer);
+    setTimeout(() => announcer.remove(), 1000);
+  }
+
+  // Keyboard shortcuts
+  setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      // Skip if typing in input
+      if (e.target.matches('input, textarea, [contenteditable]')) return;
+
+      // Global shortcuts
+      if (e.altKey || e.metaKey || e.ctrlKey) {
+        switch (e.key.toLowerCase()) {
+          case 'h':
+            e.preventDefault();
+            this.showPage('home');
+            this.announce('Home feed');
+            break;
+          case 'd':
+            e.preventDefault();
+            this.showPage('discover');
+            this.announce('Discover page');
+            break;
+          case 'i':
+            e.preventDefault();
+            this.showPage('inbox');
+            this.announce('Inbox');
+            break;
+          case 'p':
+            e.preventDefault();
+            this.showPage('profile');
+            this.announce('Profile');
+            break;
+          case 'u':
+            e.preventDefault();
+            this.showPage('upload');
+            this.announce('Create video');
+            break;
+          case '/':
+            e.preventDefault();
+            this.showPage('discover');
+            setTimeout(() => this.elements.discoverSearch?.focus(), 100);
+            break;
+        }
+      }
+
+      // Escape key handling
+      if (e.key === 'Escape') {
+        const openModals = document.querySelectorAll('.modal-overlay:not(.hidden)');
+        openModals.forEach(modal => {
+          const closeBtn = modal.querySelector('.close-modal');
+          closeBtn?.click();
+        });
+      }
+    });
+  }
+
+  // Initialize accessibility features
+  initAccessibility() {
+    this.setupKeyboardShortcuts();
+    
+    // Add tabindex to video cards for keyboard navigation
+    this.elements.videoFeed.addEventListener('DOMNodeInserted', () => {
+      const cards = this.elements.videoFeed.querySelectorAll('.video-card:not([tabindex])');
+      cards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'article');
+        card.setAttribute('aria-roledescription', 'Video');
+      });
+    });
+
+    // Handle keyboard navigation on video feed
+    this.elements.videoFeed.addEventListener('keydown', (e) => this.handleFeedKeydown(e));
   }
 }
 

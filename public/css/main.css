@@ -220,3 +220,88 @@ ul, ol {
   white-space: nowrap;
   border: 0;
 }
+
+/* Focus visible styles for keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  z-index: var(--z-tooltip);
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-primary: currentColor;
+    --border-secondary: currentColor;
+  }
+  
+  .video-action-btn {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Print styles */
+@media print {
+  .top-bar,
+  .sidebar,
+  .bottom-nav,
+  .modal-overlay,
+  .toast-container,
+  .video-actions,
+  .message-input-area {
+    display: none !important;
+  }
+  
+  #app {
+    display: block;
+    height: auto;
+    position: static;
+  }
+  
+  .main-content {
+    overflow: visible;
+  }
+}
